@@ -1,4 +1,4 @@
-package nl.tudelft.in4325.main;
+package nl.tudelft.in4325.index;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -8,6 +8,8 @@ import java.util.Vector;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
+
+import nl.tudelft.in4325.main.Main;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -41,18 +43,20 @@ public class Indexer
 					
 					while(sc.hasNext())
 					{
-						String key = sc.next();
+						String key = Main.formatString(sc.next());
+						//System.out.println(filename + ": " + key);
 						if(index.containsKey(key))
 						{
 							values = index.get(key);
-							values.add(filename);
+							if(!values.contains(filename))
+								values.add(filename);
 							index.put(key, values);
 						}
 						else
 						{
 							values = new Vector<String>();
 							values.add(filename);
-							index.put(Main.formatString(key), values);
+							index.put(key, values);
 						}	
 					}
 				}
