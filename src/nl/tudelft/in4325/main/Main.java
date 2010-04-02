@@ -6,6 +6,8 @@ import java.util.Hashtable;
 import java.util.Scanner;
 import java.util.Vector;
 
+import nl.tudelft.in4325.index.Indexer;
+
 public class Main
 {
 
