@@ -4,6 +4,7 @@ import java.io.FileNotFoundException;
 import java.text.Normalizer;
 import java.util.Hashtable;
 import java.util.Scanner;
+import java.util.Vector;
 
 public class Main
 {
@@ -12,9 +13,10 @@ public class Main
 	{
 		Scanner sc = new Scanner(System.in);
 		Indexer indexer = new Indexer();
+		
 		indexer.init();
 		//indexer.indexData();
-		Hashtable<String, String> index = indexer.getIndex();
+		Hashtable<String, Vector<String>> index = indexer.getIndex();
 		
 		System.out.println("Index build successfully, number of words indexed: " + index.size());
 		

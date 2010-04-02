@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.Hashtable;
 import java.util.Scanner;
+import java.util.Vector;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -16,15 +17,16 @@ import org.w3c.dom.NodeList;
 public class Indexer
 {
 	
-	private Hashtable<String, String> index;
+	private Hashtable<String, Vector<String>> index;
 
 	public Indexer()
 	{
-		index = new Hashtable<String, String>();
+		index = new Hashtable<String, Vector<String>>();
 	}
 	
 	public void init() throws FileNotFoundException
 	{
+		Vector<String> values;
 		File dir = new File("src/docs");
 		String[] children = dir.list();
 		if(children != null)
@@ -32,11 +34,28 @@ public class Indexer
 			int i = 0;
 			for(String filename : children)
 			{
-				i++;
-				Scanner sc = new Scanner(new File("src/docs/" + filename));
-				
-				while(sc.hasNext())
-					index.put(Main.formatString(sc.next()), filename);
+				if(filename.charAt(0) != '.')
+				{
+					i++;
+					Scanner sc = new Scanner(new File("src/docs/" + filename));
+					
+					while(sc.hasNext())
+					{
+						String key = sc.next();
+						if(index.containsKey(key))
+						{
+							values = index.get(key);
+							values.add(filename);
+							index.put(key, values);
+						}
+						else
+						{
+							values = new Vector<String>();
+							values.add(filename);
+							index.put(Main.formatString(key), values);
+						}	
+					}
+				}
 			}
 		}
 	}
@@ -80,7 +99,7 @@ public class Indexer
 		}
 	}
 	
-	public Hashtable<String, String> getIndex()
+	public Hashtable<String, Vector<String>> getIndex()
 	{
 		return index;
 	}
