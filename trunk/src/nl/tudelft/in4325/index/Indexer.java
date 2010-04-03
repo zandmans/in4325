@@ -19,16 +19,19 @@ import org.w3c.dom.NodeList;
 public class Indexer
 {
 	
-	private Hashtable<String, Vector<String>> index;
+	private Hashtable<String, Vector<Integer>> index;
+	private Hashtable<Integer, String> docs;
 
 	public Indexer()
 	{
-		index = new Hashtable<String, Vector<String>>();
+		index = new Hashtable<String, Vector<Integer>>();
+		docs = new Hashtable<Integer, String>();
 	}
+	
 	
 	public void init() throws FileNotFoundException
 	{
-		Vector<String> values;
+		Vector<Integer> values;
 		File dir = new File("src/docs");
 		String[] children = dir.list();
 		if(children != null)
@@ -40,6 +43,7 @@ public class Indexer
 				{
 					i++;
 					Scanner sc = new Scanner(new File("src/docs/" + filename));
+					docs.put(i, filename);
 					
 					while(sc.hasNext())
 					{
@@ -48,14 +52,14 @@ public class Indexer
 						if(index.containsKey(key))
 						{
 							values = index.get(key);
-							if(!values.contains(filename))
-								values.add(filename);
+							if(!values.contains(i))
+								values.add(i);
 							index.put(key, values);
 						}
 						else
 						{
-							values = new Vector<String>();
-							values.add(filename);
+							values = new Vector<Integer>();
+							values.add(i);
 							index.put(key, values);
 						}	
 					}
@@ -63,6 +67,7 @@ public class Indexer
 			}
 		}
 	}
+	
 	
 	public void indexData()
 	{
@@ -103,7 +108,8 @@ public class Indexer
 		}
 	}
 	
-	public Hashtable<String, Vector<String>> getIndex()
+	
+	public Hashtable<String, Vector<Integer>> getIndex()
 	{
 		return index;
 	}
