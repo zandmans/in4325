@@ -15,6 +15,7 @@ import java.util.Scanner;
 
 import nl.tudelft.in4325.index.Indexer;
 import nl.tudelft.in4325.index.Search;
+import nl.tudelft.in4325.index.Soundex;
 
 public class Main
 {
@@ -54,6 +55,9 @@ public class Main
 			
 			/* if the query is 'q', exit the program */
 			if(query.equals("q")) System.exit(0);
+			
+			Soundex soundex = new Soundex();
+			System.out.println(soundex.convertToken(query));
 			
 			/* perform a boolean search on the query */
 			Search.booleanSearch(query);

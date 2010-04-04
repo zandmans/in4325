@@ -87,6 +87,7 @@ public class Search {
 	 */
 	public static void booleanOR(ArrayList<Integer> r1, ArrayList<Integer> r2)
 	{
+		/* detect empty ArrayLists */
 		if(detectNull(r1, r2)) return;
 		
 		/* add a null-value at the end of both ArrayLists for the iterator */
@@ -204,6 +205,7 @@ public class Search {
 	 */
 	public static void booleanNOT(ArrayList<Integer> r1, ArrayList<Integer> r2)
 	{
+		/* detect empty ArrayLists */
 		if(detectNull(r1, r2)) return;
 		
 		/* add a null-value at the end of both ArrayLists for the iterator */
