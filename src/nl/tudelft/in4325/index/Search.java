@@ -87,7 +87,8 @@ public class Search {
 		
 		/* convert the docId's back to the document names */
 		String output = "| ";
-		if(results.get(0) != null)
+		
+		if(results != null && results.size() > 0 && results.get(0) != null && results.get(0).size() > 0)
 			for(Integer docId : results.get(0))
 				output += Main.docs.get(docId) + " | ";
 		else
@@ -98,12 +99,21 @@ public class Search {
 	}
 	
 	
+	/**
+	 * Print suggestions based on the soundex algorithm
+	 * 
+	 * @author Thijs Zandvliet
+	 * @param keyword
+	 */
 	public static void printSuggestions(String keyword)
 	{
 		/* create new Soundex object */
 		Soundex soundex = new Soundex();
 		
+		/* find words with the same soundex-string as the keyword */
 		ArrayList<String> suggestions = Main.sIndex.get(soundex.convertToken(keyword));
+		
+		/* if there are suggestions available, remove the keyword and print the rest */
 		if(suggestions != null)
 		{
 			suggestions.remove(keyword);
