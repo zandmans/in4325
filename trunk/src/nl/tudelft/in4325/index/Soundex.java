@@ -90,6 +90,7 @@ public class Soundex
 		char firstLetter = wordStr.charAt(0);
 		
 		/* replace all the characters with an integer according to the rules of soundex */
+		wordStr = wordStr.replaceAll("[^A-Z]", "0");
 		wordStr = wordStr.replaceAll("[AEIOUHWY]", "0");
 		wordStr = wordStr.replaceAll("[BFPV]", "1");
 		wordStr = wordStr.replaceAll("[CGJKQSXZ]", "2");
