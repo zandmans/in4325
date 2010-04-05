@@ -36,7 +36,6 @@ public class Indexer
 	 * Initialize
 	 * Read all the documents in the directory docs
 	 * 
-	 * @author Thijs Zandvliet
 	 * @throws FileNotFoundException
 	 */
 	public void init() throws FileNotFoundException
@@ -99,12 +98,22 @@ public class Indexer
 	/**
 	 * Return the index
 	 * 
-	 * @author Thijs Zandvliet
 	 * @return index
 	 */
 	public Hashtable<String, ArrayList<Integer>> getIndex()
 	{
 		return index;
+	}
+	
+	
+	/**
+	 * Return the names of the documents
+	 * 
+	 * @return docs
+	 */
+	public Hashtable<Integer, String> getDocs()
+	{
+		return docs;
 	}
 	
 }

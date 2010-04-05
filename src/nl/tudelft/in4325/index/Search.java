@@ -43,12 +43,21 @@ public class Search {
 				/* if one of the boolean terms is used and there's a next word to read... */
 				if((keyword.equals("or") || keyword.equals("and") || keyword.equals("not")) && sc.hasNext())
 				{
+					/* save the next word */
+					String nextWord = sc.next();
+					
+					/* print the suggestions by using soundex */
+					printSuggestions(nextWord);
+					
 					/* search for the next word in the Hashtable and add it to the results */
-					ArrayList<Integer> result = Main.index.get(sc.next());
+					ArrayList<Integer> result = Main.index.get(nextWord);
 					results.add(result);
 				}
 				else
 				{
+					/* print the suggestions by using soundex */
+					printSuggestions(keyword);
+					
 					/* search for the keyword in the Hashtable and add it to the results */
 					ArrayList<Integer> result = Main.index.get(keyword);
 					results.add(result);
@@ -68,13 +77,38 @@ public class Search {
 			/* if the ArrayList results is empty, search for the keyword in the Hashtable and add it to the results */
 			else
 			{
+				/* print the suggestions by using soundex */
+				printSuggestions(keyword);
+				
 				ArrayList<Integer> result = Main.index.get(keyword);
 				results.add(result);
 			}
 		}
 		
+		/* convert the docId's back to the document names */
+		String output = "| ";
+		if(results.get(0) != null)
+			for(Integer docId : results.get(0))
+				output += Main.docs.get(docId) + " | ";
+		else
+			output = "No matching results found in the index !";
+		
 		/* print the results */
-		System.out.println(results);
+		System.out.println(output);
+	}
+	
+	
+	public static void printSuggestions(String keyword)
+	{
+		/* create new Soundex object */
+		Soundex soundex = new Soundex();
+		
+		ArrayList<String> suggestions = Main.sIndex.get(soundex.convertToken(keyword));
+		if(suggestions != null)
+		{
+			suggestions.remove(keyword);
+			System.out.println("Or did u mean: " + suggestions);
+		}
 	}
 	
 	

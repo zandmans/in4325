@@ -22,6 +22,8 @@ public class Main
 
 	/* variable declarations */
 	public static Hashtable<String, ArrayList<Integer>> index;
+	public static Hashtable<Integer, String> docs;
+	public static Hashtable<String, ArrayList<String>> sIndex;
 	
 	
 	/**
@@ -42,9 +44,15 @@ public class Main
 		/* create a new index */
 		indexer.init();
 		index = indexer.getIndex();
+		docs = indexer.getDocs();
+		
+		/* create a new soundex index based on the current index */
+		Soundex soundex = new Soundex();
+		sIndex = soundex.convertIndex();
 		
 		/* notify the user about the number of words indexed */
 		System.out.println("Index build successfully, number of words indexed: " + index.size());
+		System.out.println("Soundex index build successfully, number of words indexed: " + index.size());
 		
 		/* create an 'infinite' loop for the input, break it when the input is q */
 		while(true)
@@ -55,9 +63,6 @@ public class Main
 			
 			/* if the query is 'q', exit the program */
 			if(query.equals("q")) System.exit(0);
-			
-			Soundex soundex = new Soundex();
-			System.out.println(soundex.convertToken(query));
 			
 			/* perform a boolean search on the query */
 			Search.booleanSearch(query);
@@ -102,7 +107,7 @@ public class Main
 	 */
 	public static void testIndex()
 	{
-		Enumeration<String> e = index.keys();
+		Enumeration<String> e = sIndex.keys();
 		while(e.hasMoreElements())
 			System.out.println(e.nextElement());
 	}
