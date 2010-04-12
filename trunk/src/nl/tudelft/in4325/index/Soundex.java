@@ -26,7 +26,7 @@ public class Soundex
 	
 	
 	/**
-	 * Converts all the words in the index to a soundex presentations
+	 * Converts all the words in the index to a soundex presentation
 	 * 
 	 * @return Hashtable
 	 */

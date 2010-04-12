@@ -26,8 +26,9 @@ public class Indexer
 	 */
 	public Indexer()
 	{
-		/* create a new Hashtable for the index and the documents */
+		/* create a new Hashtable<word, doc ids> for the index */
 		index = new Hashtable<String, ArrayList<Integer>>();
+		/* create a new Hashtable<doc id, doc name> for the documents */
 		docs = new Hashtable<Integer, String>();
 	}
 	
