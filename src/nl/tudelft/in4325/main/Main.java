@@ -58,7 +58,7 @@ public class Main
 		while(true)
 		{
 			/* create the possibility to input a query */
-			System.out.println("Query: ");
+			System.out.println("\nQuery: ");
 			String query = sc.nextLine();
 
 			/* if the query is 'q', exit the program */
