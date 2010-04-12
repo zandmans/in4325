@@ -22,7 +22,7 @@ import nl.tudelft.in4325.index.BTree;
 public class Main 
 {
 	/* variable declarations */
-	public static Hashtable<String, ArrayList<Integer>> index;
+	public static Hashtable<String, Hashtable<Integer,Integer>> index;
 	public static Hashtable<Integer, String> docs;
 	public static Hashtable<String, ArrayList<String>> sIndex;
 
@@ -215,14 +215,14 @@ public class Main
 	 */
 	public static String getDocuments(String keyword) {
 		/* create a new ArrayList for the results */
-		ArrayList<ArrayList<Integer>> results = new ArrayList<ArrayList<Integer>>();
-		ArrayList<Integer> result = Main.index.get(keyword);
+		ArrayList<Hashtable<Integer,Integer>> results = new ArrayList<Hashtable<Integer,Integer>>();
+		Hashtable<Integer,Integer> result = Main.index.get(keyword);
 		results.add(result);
 		/* convert the docId's back to the document names */
 		String output = " | ";
 		
 		if(results != null && results.size() > 0 && results.get(0) != null && results.get(0).size() > 0)
-			for(Integer docId : results.get(0))
+			for(Integer docId : results.get(0).keySet())
 				output += Main.docs.get(docId) + " | ";
 		else
 			output = "No matching results found in the index !";
