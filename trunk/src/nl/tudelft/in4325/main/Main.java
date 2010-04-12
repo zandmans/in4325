@@ -104,7 +104,7 @@ public class Main
 			resultList = manageTrailingQueries(s, bTree);
 			if(resultList != null) {
 				for(String i : resultList) {
-					System.out.println(i + " || " + "[documents]");
+					System.out.println("[" + i + "] in " + getDocuments(i));
 				}
 			} else {
 				noResults();
@@ -122,7 +122,8 @@ public class Main
 			if(resultList != null) {
 				for(String i : resultList) {
 					/* reverse retrieved words back */
-					System.out.println(revBTree.reverseWord(i) + " || " + "[documents]");
+					String j = revBTree.reverseWord(i);
+					System.out.println("[" + j + "] in " + getDocuments(j));
 				}
 			} else {
 				noResults();
@@ -157,8 +158,8 @@ public class Main
 				resultList.retainAll(resultA);
 				
 				/* Print out results */
-				for (String j : resultList) {
-					System.out.println(j + " || " + "[documents]");
+				for (String i : resultList) {
+					System.out.println("[" + i  + "] in " + getDocuments(i));
 				}
 				
 			} else {
@@ -207,6 +208,28 @@ public class Main
 		System.out.println("No results were found for your wildcard query");
 	}
 
+	/**
+	 * Gets documents corresponding to given keyword
+	 * @param keyword
+	 * @return
+	 */
+	public static String getDocuments(String keyword) {
+		/* create a new ArrayList for the results */
+		ArrayList<ArrayList<Integer>> results = new ArrayList<ArrayList<Integer>>();
+		ArrayList<Integer> result = Main.index.get(keyword);
+		results.add(result);
+		/* convert the docId's back to the document names */
+		String output = " | ";
+		
+		if(results != null && results.size() > 0 && results.get(0) != null && results.get(0).size() > 0)
+			for(Integer docId : results.get(0))
+				output += Main.docs.get(docId) + " | ";
+		else
+			output = "No matching results found in the index !";
+		
+		return output;
+	}
+	
 	/**
 	 * Normalize the given string, 
 	 * the new format is lowercase and contains only alphabetical letters and numbers
