@@ -17,7 +17,7 @@ import nl.tudelft.in4325.main.Main;
 public class Indexer
 {
 	/* variable declarations */ 
-	private Hashtable<String, ArrayList<Integer>> index;
+	private Hashtable<String, Hashtable<Integer,Integer>> index;
 	private Hashtable<Integer, String> docs;
 
 	
@@ -27,7 +27,7 @@ public class Indexer
 	public Indexer()
 	{
 		/* create a new Hashtable<word, doc ids> for the index */
-		index = new Hashtable<String, ArrayList<Integer>>();
+		index = new Hashtable<String, Hashtable<Integer,Integer>>();
 		/* create a new Hashtable<doc id, doc name> for the documents */
 		docs = new Hashtable<Integer, String>();
 	}
@@ -42,7 +42,7 @@ public class Indexer
 	public void init() throws FileNotFoundException
 	{
 		/* define a new ArrayList for the found words */
-		ArrayList<Integer> values;
+		Hashtable<Integer,Integer> values;
 		
 		/* define a new file object with the directory to read and retrieve all the content */
 		File dir = new File("src/docs");
@@ -77,18 +77,20 @@ public class Indexer
 						if(index.containsKey(key))
 						{
 							values = index.get(key);
-							if(!values.contains(i))
-								values.add(i);
+							if(!values.containsKey(i)){
+								values.put(i,1);
+							} else {
+								values.put(i, values.get(i)+1);
+							}
 							index.put(key, values);
 						}
-						
 						/* else make a new ArrayList and add it to a new key into the Hashtable */
 						else
 						{
-							values = new ArrayList<Integer>();
-							values.add(i);
+							values = new Hashtable<Integer,Integer>();
+							values.put(i,1);
 							index.put(key, values);
-						}	
+						}
 					}
 				}
 			}
@@ -101,7 +103,7 @@ public class Indexer
 	 * 
 	 * @return index
 	 */
-	public Hashtable<String, ArrayList<Integer>> getIndex()
+	public Hashtable<String, Hashtable<Integer,Integer>> getIndex()
 	{
 		return index;
 	}

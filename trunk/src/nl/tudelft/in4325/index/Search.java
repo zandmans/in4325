@@ -7,7 +7,9 @@
 package nl.tudelft.in4325.index;
 
 import java.util.ArrayList;
+import java.util.Hashtable;
 import java.util.Iterator;
+import java.util.PriorityQueue;
 import java.util.Scanner;
 
 import nl.tudelft.in4325.main.Main;
@@ -15,7 +17,8 @@ import nl.tudelft.in4325.main.Main;
 public class Search {
 
 	/* variable declarations */
-	private static ArrayList<ArrayList<Integer>> results;
+	private static ArrayList<Hashtable<Integer,Integer>> results;
+	private static Hashtable<String,Hashtable<Integer,Integer>> pertermResults;
 	
 	/**
 	 * Performs a boolean search on the given query
@@ -29,7 +32,8 @@ public class Search {
 		Scanner sc = new Scanner(query);
 		
 		/* create a new ArrayList for the results */
-		results = new ArrayList<ArrayList<Integer>>();
+		results = new ArrayList<Hashtable<Integer,Integer>>();
+		pertermResults = new Hashtable<String,Hashtable<Integer,Integer>>();
 		
 		/* as long as the scanner reads new words... */
 		while(sc.hasNext())
@@ -50,8 +54,9 @@ public class Search {
 					printSuggestions(nextWord);
 					
 					/* search for the next word in the Hashtable and add it to the results */
-					ArrayList<Integer> result = Main.index.get(nextWord);
+					Hashtable<Integer,Integer> result = Main.index.get(nextWord);
 					results.add(result);
+					pertermResults.put(nextWord, result);
 				}
 				else
 				{
@@ -59,13 +64,14 @@ public class Search {
 					printSuggestions(keyword);
 					
 					/* search for the keyword in the Hashtable and add it to the results */
-					ArrayList<Integer> result = Main.index.get(keyword);
+					Hashtable<Integer,Integer> result = Main.index.get(keyword);
 					results.add(result);
+					pertermResults.put(keyword, result);
 				}
 				
 				/* receive the first two ArrayLists */
-				ArrayList<Integer> r1 = results.get(0);
-				ArrayList<Integer> r2 = results.get(1);
+				Hashtable<Integer,Integer> r1 = results.get(0);
+				Hashtable<Integer,Integer> r2 = results.get(1);
 				
 				/* find the right function for the right term */
 				if(keyword.equals("or")) booleanOR(r1, r2);
@@ -80,16 +86,34 @@ public class Search {
 				/* print the suggestions by using soundex */
 				printSuggestions(keyword);
 				
-				ArrayList<Integer> result = Main.index.get(keyword);
+				Hashtable<Integer,Integer> result = Main.index.get(keyword);
 				results.add(result);
+				pertermResults.put(keyword, result);
 			}
 		}
 		
+		// rank them
+		PriorityQueue<RankedNode> ranked = Ranking.getHeap(pertermResults);
+		
+		printRanked(ranked);
+		//printResult();
+	}
+	public static void printRanked(PriorityQueue<RankedNode> p){
+		String output = "Ranked result (top 3 of "+p.size()+")";
+		RankedNode n;
+		for(int i = 0;i<3 && !p.isEmpty();i++){
+			n = p.poll();
+			output += "\n"+Main.docs.get(n.getDocID())+" ["+n.getScore()+"]";
+		}
+		System.out.println(output);
+	}
+	
+	public static void printResult(){
 		/* convert the docId's back to the document names */
 		String output = "| ";
 		
 		if(results != null && results.size() > 0 && results.get(0) != null && results.get(0).size() > 0)
-			for(Integer docId : results.get(0))
+			for(Integer docId : results.get(0).keySet())
 				output += Main.docs.get(docId) + " | ";
 		else
 			output = "No matching results found in the index !";
@@ -105,13 +129,14 @@ public class Search {
 	 * @author Thijs Zandvliet
 	 * @param keyword
 	 */
+	@SuppressWarnings("unchecked")
 	public static void printSuggestions(String keyword)
 	{
 		/* create new Soundex object */
 		Soundex soundex = new Soundex();
 		
 		/* find words with the same soundex-string as the keyword */
-		ArrayList<String> suggestions = Main.sIndex.get(soundex.convertToken(keyword));
+		ArrayList<String> suggestions = (ArrayList<String>)Main.sIndex.get(soundex.convertToken(keyword)).clone();
 		
 		/* if there are suggestions available, remove the keyword and print the rest */
 		if(suggestions != null)
@@ -129,25 +154,25 @@ public class Search {
 	 * 
 	 * @author Thijs Zandvliet
 	 */
-	public static void booleanOR(ArrayList<Integer> r1, ArrayList<Integer> r2)
+	public static void booleanOR(Hashtable<Integer,Integer> r1, Hashtable<Integer,Integer> r2)
 	{
 		/* detect empty ArrayLists */
 		if(detectNull(r1, r2)) return;
 		
 		/* add a null-value at the end of both ArrayLists for the iterator */
-		r1.add(null);
-		r2.add(null);
+		r1.put(null,null);
+		r2.put(null,null);
 		
 		/* create two iterators for both ArrayLists */
-		Iterator<Integer> p1 = r1.iterator();
-		Iterator<Integer> p2 = r2.iterator();
+		Iterator<Integer> p1 = r1.keySet().iterator();
+		Iterator<Integer> p2 = r2.keySet().iterator();
 		
 		/* set the two first Integers so they can be compared */
 		Integer i1 = p1.next();
 		Integer i2 = p2.next();
 		
 		/* create a new ArrayList for the answer */
-		ArrayList<Integer> answer = new ArrayList<Integer>();
+		Hashtable<Integer,Integer> answer = new Hashtable<Integer,Integer>();
 		
 		/* as long as there are at least the null-values add the end, loop */
 		while(p1.hasNext() && p2.hasNext())
@@ -155,7 +180,7 @@ public class Search {
 			/* if both Integers are equal, add the answer and increase both iterators */
 			if(i1 == i2)
 			{
-				answer.add(i1);
+				answer.put(i1,r1.get(i1));
 				i1 = p1.next();
 				i2 = p2.next();
 			}
@@ -163,14 +188,14 @@ public class Search {
 			/* if the first Integer is smaller than the second, add it to the answer and increase the first iterator */
 			else if(i1 < i2)
 			{
-				answer.add(i1);
+				answer.put(i1,r1.get(i1));
 				i1 = p1.next();
 			}
 			
 			/* else, add it to the answer and increase the second iterator */
 			else
 			{
-				answer.add(i2);
+				answer.put(i2,r2.get(i2));
 				i2 = p2.next();
 			}
 		}
@@ -189,7 +214,7 @@ public class Search {
 	 * 
 	 * @author Thijs Zandvliet
 	 */
-	public static void booleanAND(ArrayList<Integer> r1, ArrayList<Integer> r2)
+	public static void booleanAND(Hashtable<Integer,Integer> r1, Hashtable<Integer,Integer> r2)
 	{
 		/* if one of the ArrayLists is empty, clear the results ArrayList and return */
 		if(r1 == null || r2 == null)
@@ -199,15 +224,15 @@ public class Search {
 		}
 		
 		/* add a null-value at the end of both ArrayLists for the iterator */
-		r1.add(null);
-		r2.add(null);
+		r1.put(null,null);
+		r2.put(null,null);
 		
 		/* create a new ArrayList for the answer */
-		ArrayList<Integer> answer = new ArrayList<Integer>();
+		Hashtable<Integer,Integer> answer = new Hashtable<Integer,Integer>();
 		
 		/* create two iterators for both ArrayLists */
-		Iterator<Integer> p1 = r1.iterator();
-		Iterator<Integer> p2 = r2.iterator();
+		Iterator<Integer> p1 = r1.keySet().iterator();
+		Iterator<Integer> p2 = r2.keySet().iterator();
 		
 		/* set the two first Integers so they can be compared */
 		Integer i1 = p1.next();
@@ -219,7 +244,7 @@ public class Search {
 			/* if both Integers are equal, add the answer and increase both iterators */
 			if(i1 == i2)
 			{
-				answer.add(i1);
+				answer.put(i1,r1.get(i1));
 				i1 = p1.next();
 				i2 = p2.next();
 			}
@@ -247,21 +272,21 @@ public class Search {
 	 * 
 	 * @author Thijs Zandvliet
 	 */
-	public static void booleanNOT(ArrayList<Integer> r1, ArrayList<Integer> r2)
+	public static void booleanNOT(Hashtable<Integer,Integer> r1, Hashtable<Integer,Integer> r2)
 	{
 		/* detect empty ArrayLists */
 		if(detectNull(r1, r2)) return;
 		
 		/* add a null-value at the end of both ArrayLists for the iterator */
-		r1.add(null);
-		r2.add(null);
+		r1.put(null,null);
+		r2.put(null,null);
 		
 		/* create a new ArrayList for the answer */
-		ArrayList<Integer> answer = new ArrayList<Integer>();
+		Hashtable<Integer,Integer> answer = new Hashtable<Integer,Integer>();
 		
 		/* create two iterators for both ArrayLists */
-		Iterator<Integer> p1 = r1.iterator();
-		Iterator<Integer> p2 = r2.iterator();
+		Iterator<Integer> p1 = r1.keySet().iterator();
+		Iterator<Integer> p2 = r2.keySet().iterator();
 		
 		/* set the two first Integers so they can be compared */
 		Integer i1 = p1.next();
@@ -280,14 +305,14 @@ public class Search {
 			/* if the first Integer is smaller than the second, increase the first iterator */
 			else if(i1 < i2)
 			{
-				answer.add(i1);
+				answer.put(i1,r1.get(i1));
 				i1 = p1.next();
 			}
 			
 			/* else, increase the second iterator */
 			else
 			{
-				answer.add(i1);
+				answer.put(i1,r1.get(i1));
 				i2 = p2.next();
 			}
 		}
@@ -307,7 +332,7 @@ public class Search {
 	 * @param r2
 	 * @return boolean
 	 */
-	public static boolean detectNull(ArrayList<Integer> r1, ArrayList<Integer> r2)
+	public static boolean detectNull(Hashtable<Integer,Integer> r1, Hashtable<Integer,Integer> r2)
 	{
 		/* if one of the ArrayLists is empty, clear the results */
 		if(r1 == null || r2 == null)
