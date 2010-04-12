@@ -87,16 +87,26 @@ public class Search {
 				printSuggestions(keyword);
 				
 				Hashtable<Integer,Integer> result = Main.index.get(keyword);
-				results.add(result);
-				pertermResults.put(keyword, result);
+				
+				/* only add if there are results */
+				if(result != null)
+				{
+					results.add(result);
+					pertermResults.put(keyword, result);
+				}
+				else System.out.println("No results.");
 			}
 		}
 		
-		// rank them
-		PriorityQueue<RankedNode> ranked = Ranking.getHeap(pertermResults);
-		
-		printRanked(ranked);
-		//printResult();
+		/* if there are results to be processed */
+		if(!pertermResults.isEmpty())
+		{
+			// rank them
+			PriorityQueue<RankedNode> ranked = Ranking.getHeap(pertermResults);
+			
+			printRanked(ranked);
+			//printResult();
+		}
 	}
 	public static void printRanked(PriorityQueue<RankedNode> p){
 		String output = "Ranked result (top 3 of "+p.size()+")";
@@ -136,14 +146,15 @@ public class Search {
 		Soundex soundex = new Soundex();
 		
 		/* find words with the same soundex-string as the keyword */
-		ArrayList<String> suggestions = (ArrayList<String>)Main.sIndex.get(soundex.convertToken(keyword)).clone();
+		//ArrayList<String> suggestions = (ArrayList<String>)Main.sIndex.get(soundex.convertToken(keyword)).clone();
+		ArrayList<String> suggestions = (ArrayList<String>)Main.sIndex.get(soundex.convertToken(keyword));
 		
 		/* if there are suggestions available, remove the keyword and print the rest */
 		if(suggestions != null)
 		{
 			suggestions.remove(keyword);
 			System.out.println("Or did u mean: " + suggestions);
-		}
+		} else System.out.println("No suggestions available.");
 	}
 	
 	
