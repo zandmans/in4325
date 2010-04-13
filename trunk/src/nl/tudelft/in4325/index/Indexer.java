@@ -59,7 +59,7 @@ public class Indexer
 			{
 				/* if the filename doesn't start with a dot, then... , otherwise it could be a configuration file like .svn */
 				if(filename.charAt(0) != '.')
-				{
+				{	
 					/* increase the document counter */
 					i++;
 					

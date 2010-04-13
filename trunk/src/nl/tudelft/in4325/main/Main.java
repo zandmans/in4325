@@ -65,14 +65,18 @@ public class Main
 			if(query.equals("q")) System.exit(0);
 
 
-			if(!query.contains("*")) {
-				/* perform a boolean search on the query */
-				Search.booleanSearch(query);
-			}
-			else {
+			if(query.contains("*")) {
 				/* perform b-tree search using wild cards */
 				processBTreeSearchResult(query);
 			}
+			else if(query.charAt(0) == '$') {
+				/* perform a boolean search/optimized cosine ranking on the query */
+				Search.booleanSearch(query, 1);
+			}else {
+				/* perform a boolean search/cosine ranking on the query */
+				Search.booleanSearch(query, 0);
+			}
+			
 		}
 	}
 
