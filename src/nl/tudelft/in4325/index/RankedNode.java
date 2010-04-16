@@ -1,5 +1,9 @@
 package nl.tudelft.in4325.index;
-
+/**
+ * container class for a document in a heap, proper compare function implemented
+ * @author Peter Dijkshoorn
+ *
+ */
 public class RankedNode implements Comparable<RankedNode>{
 	private double score;
 	private int docID;

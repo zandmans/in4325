@@ -1,14 +1,19 @@
 package nl.tudelft.in4325.index;
 
+import java.util.ArrayList;
 import java.util.Hashtable;
 import java.util.PriorityQueue;
 
 import nl.tudelft.in4325.main.Main;
-
+/**
+ * implements the cosine ranking algorithm
+ * @author Peter Dijkshoorn
+ *
+ */
 public class Ranking {
 	public static PriorityQueue<RankedNode> result; // heap based prio queue
 
-	public static PriorityQueue<RankedNode> getHeap(Hashtable<String,Hashtable<Integer,Integer>> unranked){
+	public static PriorityQueue<RankedNode> getHeap(Hashtable<String,Hashtable<Integer,Integer>> unranked, ArrayList<Hashtable<Integer,Integer>> booleanresults){
 		// calculate each cosine and construct heap
 		result = new PriorityQueue<RankedNode>();
 		
@@ -20,6 +25,7 @@ public class Ranking {
 		int tf,df;
 		double tfidf;
 		Hashtable<String,Double> queryVector = new Hashtable<String,Double>();
+		boolean inActualResult;
 		
 		// for each term
 		for(String term : unranked.keySet()){
@@ -27,8 +33,18 @@ public class Ranking {
 			
 			queryVector.put(term, tfidf(1,df,N));
 			
+			
 			// for each document
 			for(Integer docID : unranked.get(term).keySet()){
+				
+				// check whether result is somewhere in boolean result
+				inActualResult = false;
+				for(Hashtable<Integer,Integer> match : booleanresults){
+					if(match.containsKey(docID)){
+						inActualResult = true;
+					}
+				}
+				if(!inActualResult)continue;
 				// calculate score and put in prioqueue
 				tf = unranked.get(term).get(docID);
 				tfidf = tfidf(tf,df,N);
@@ -52,13 +68,14 @@ public class Ranking {
 	
 	/**
 	 * for each term and document hit, tf-idf needs to be calculated
-	 * @param tf
-	 * @param df
-	 * @param N
+	 * @param tf term frequency, how many times is this term stated in this document
+	 * @param df document frequency, how many douments contain this word
+	 * @param N total count of documents in system
 	 * @return
+	 * 
 	 */
 	public static double tfidf(int tf, int df, int N){
-		return (1+Math.log(tf))*Math.log10(N/df);
+		return (1+Math.log(tf))*Math.log10(((double)N)/((double)df));
 	}
 	/**
 	 * returns normalized version of vector

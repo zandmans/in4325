@@ -8,7 +8,6 @@ package nl.tudelft.in4325.index;
 
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.util.ArrayList;
 import java.util.Hashtable;
 import java.util.Scanner;
 
