@@ -114,7 +114,7 @@ public class Search {
 		if(!pertermResults.isEmpty() && mode == 0)
 		{
 			// rank them
-			PriorityQueue<RankedNode> ranked = Ranking.getHeap(pertermResults);
+			PriorityQueue<RankedNode> ranked = Ranking.getHeap(pertermResults, results);
 			//System.out.println(pertermResults);
 			printRanked(ranked);
 			printResult();
@@ -137,7 +137,7 @@ public class Search {
 			System.out.println("Optimized result: " + optimizedResults);
 			
 			// rank only the docs that contain 'size' of the terms
-			PriorityQueue<RankedNode> ranked = Ranking.getHeap(optimizedResults);
+			PriorityQueue<RankedNode> ranked = Ranking.getHeap(optimizedResults, results);
 			
 			printRanked(ranked);
 			printResult();
@@ -244,7 +244,6 @@ public class Search {
 	 * @author Thijs Zandvliet
 	 * @param keyword
 	 */
-	@SuppressWarnings("unchecked")
 	public static void printSuggestions(String keyword)
 	{
 		/* create new Soundex object */
