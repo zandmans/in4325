@@ -7,7 +7,7 @@ import java.util.List;
 import nl.tudelft.in4325.main.Main;
 
 /**
- * class Btree3 which implements the B-tree for 
+ * class BTree which implements the B-tree for 
  * searching words in dictionary using wildcards
  * 
  * @author Pierre Lopez Barbosa
@@ -24,20 +24,25 @@ public class BTree {
 	 * Insert all words in dictionary in the balanced tree
 	 */
 	public BTree(char type) {
-		root = new Node();
-		Enumeration<String> e = Main.index.keys();
-		
-		/* insert all keys (words) in the tree */
-		while (e.hasMoreElements()) {
-			String next = e.nextElement();
-			if (!next.isEmpty()) {
-				if(type == 'n') { /* Add words to tree in normal order */
-					addWord(next); 
-				} else if(type == 'r') { /* Reverse word to create reversed BTree */
-					String reversedWord = reverseWord(next);
-					addWord(reversedWord);
+		try {
+			root = new Node();
+			Enumeration<String> e = Main.index.keys();
+			
+			/* insert all keys (words) in the tree */
+			while (e.hasMoreElements()) {
+				String next = e.nextElement();
+				if (!next.isEmpty()) {
+					if(type == 'n') { /* Add words to tree in normal order */
+						addWord(next); 
+					} else if(type == 'r') { /* Reverse word to create reversed BTree */
+						String reversedWord = reverseWord(next);
+						addWord(reversedWord);
+					}
 				}
 			}
+		} catch(Exception ex) {
+			System.out.println("Whoops..something went wrong..\n\n");
+			ex.printStackTrace();
 		}
 	}
 
@@ -59,7 +64,7 @@ public class BTree {
 	public List<String> search(String prefix) {
 		/* Find the node which represents the last letter of the prefix  */
 		Node lastNode = root;
-		for (int i=0; i<prefix.length(); i++) {
+		for (int i=0; i < prefix.length(); i++) {
 			lastNode = lastNode.getNode(prefix.charAt(i));
 
 			/* If no node matches, then no words exist, return empty list */

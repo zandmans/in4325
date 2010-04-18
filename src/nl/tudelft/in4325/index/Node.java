@@ -23,7 +23,7 @@ public class Node {
 	 * Constructor for top level root node.
 	 */
 	public Node() {
-		children = new Node[26];
+		children = new Node[75];
 		isLeaf = true;
 		isWord = false;
 	}
@@ -37,15 +37,15 @@ public class Node {
 	}
 
 	/**
-//	 * Adds a word to this node. This method is called recursively and
-//	 * adds child nodes for each successive letter in the word, therefore
-//	 * recursive calls will be made with partial words.
-//	 * @param word the word to add
-//	 */
+	 * Adds a word to this node. This method is called recursively and
+	 * adds child nodes for each successive letter in the word, therefore
+	 * recursive calls will be made with partial words.
+	 * @param word the word to add
+	 */
 	protected void addWord(String word) {
 		setIsLeaf(false);
 		/* position of the letter in the array alphabetical order */
-		int charPos = word.charAt(0) - 'a';
+		int charPos = Math.abs(word.charAt(0) - 'a');
 		
 		/* if character does not exist in tree yet, create new child for the root */
 		if (getChildAt(charPos) == null) {
@@ -75,7 +75,7 @@ public class Node {
 
 	/**
 	 * Returns a List of String objects which are lower in the
-	 * hierarchy that this node.
+	 * hierarchy than this node.
 	 * @return
 	 */
 	protected List<String> getWords() {
@@ -90,7 +90,7 @@ public class Node {
 		/* If any children */
 		if (!getIsLeaf()) {
 			/* Add any words belonging to any children */
-			for (int i=0; i<children.length; i++) {
+			for (int i=0; i < children.length; i++) {
 				if (getChildAt(i) != null) {
 					/* recursively invoke method to get lower level characters */
 					list.addAll(getChildAt(i).getWords());
