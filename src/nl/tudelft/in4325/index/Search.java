@@ -113,11 +113,19 @@ public class Search {
 		/* if there are results to be processed */
 		if(!pertermResults.isEmpty() && mode == 0)
 		{
+			
+			/* take current system time, in order to calculate execution time */
+			long startTime = System.nanoTime();
+			
 			// rank them
 			PriorityQueue<RankedNode> ranked = Ranking.getHeap(pertermResults, results);
 			//System.out.println(pertermResults);
 			printRanked(ranked);
 			printResult();
+			
+			/* take current system time, in order to calculate execution time */
+			long endTime = System.nanoTime();
+		    System.out.println("Execution time: " + (endTime-startTime) + " nanoseconds.");
 		}
 		
 		/* if there are results to be processed and optimization to be done */
@@ -136,11 +144,18 @@ public class Search {
 			
 			System.out.println("Optimized result: " + optimizedResults);
 			
+			/* take current system time, in order to calculate execution time */
+			long startTime = System.nanoTime();
+			
 			// rank only the docs that contain 'size' of the terms
 			PriorityQueue<RankedNode> ranked = Ranking.getHeap(optimizedResults, results);
 			
 			printRanked(ranked);
 			printResult();
+			
+			/* take current system time, in order to calculate execution time */
+			long endTime = System.nanoTime();
+		    System.out.println("Execution time: " + (endTime-startTime) + " nanoseconds.");
 		}
 	}
 	
