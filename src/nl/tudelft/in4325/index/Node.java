@@ -23,7 +23,7 @@ public class Node {
 	 * Constructor for top level root node.
 	 */
 	public Node() {
-		children = new Node[75];
+		children = new Node[50];
 		isLeaf = true;
 		isWord = false;
 	}
@@ -84,7 +84,7 @@ public class Node {
 
 		/* If this node represents a word, add it */
 		if (getIsWord()) {
-			list.add(toString());
+				list.add(toString());
 		}
 
 		/* If any children */
