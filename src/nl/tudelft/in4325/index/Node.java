@@ -70,7 +70,11 @@ public class Node {
 	 * @return
 	 */
 	protected Node getNode(char c) {
-		return children[Math.abs(c - 'a')];
+		try {
+			return children[Math.abs(c - 'a')];
+		} catch(Exception ex) {
+			return null;			
+		}
 	}
 
 	/**
