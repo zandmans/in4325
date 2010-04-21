@@ -87,23 +87,24 @@ public class BTreeProcessor {
 				/* second part do reverse btree search */
 				resultB = manageLeadingQueries("*"+words[1], revBTree);
 				
-				/* reverse words in resultB and at to resultList */
-				if(resultB.size() != 0) {
+				/* If one of both lists is empty no results have been found */
+				if(resultA.size() == 0 || resultB.size() == 0) {
+					noResults();
+				}
+				else {
+					/* reverse words in resultB and add to resultList */
 					for(String i : resultB) {						
 						resultList.add(revBTree.reverseWord(i));
 					}
-				} else {
-					noResults();
+					
+					/* Compute the intersection of both resultList and resultA */
+					resultList.retainAll(resultA);
+					
+					/* Print out results */
+					for (String i : resultList) {
+						System.out.println("[" + i  + "] in " + getDocuments(i));
+					}
 				}
-				
-				/* Compute the intersection of both resultList and resultA */
-				resultList.retainAll(resultA);
-				
-				/* Print out results */
-				for (String i : resultList) {
-					System.out.println("[" + i  + "] in " + getDocuments(i));
-				}
-				
 			} else {
 				System.out.println("Multiple wildcard terms not implemented....");
 			}
