@@ -29,6 +29,9 @@ public class BTreeProcessor {
 	 * @author Pierre Lopez Barbosa
 	 */
 	public void processBTreeSearchResult(String s) {
+		/* Converts all of the characters in this String to lower case */
+		s = s.toLowerCase();
+		
 		/* List for holding results for all 3 cases */
 		List<String> resultList = new ArrayList<String>();
 		/* Create a new BTree object */
@@ -41,7 +44,7 @@ public class BTreeProcessor {
 		 */
 		if (s.endsWith("*")) {
 			resultList = manageTrailingQueries(s, bTree);
-			if(resultList != null) {
+			if(resultList.size() != 0) {
 				for(String i : resultList) {
 					System.out.println("[" + i + "] in " + getDocuments(i));
 				}
@@ -58,7 +61,7 @@ public class BTreeProcessor {
 		else if(s.startsWith("*")) {
 			resultList = manageLeadingQueries(s, revBTree);
 
-			if(resultList != null) {
+			if(resultList.size() != 0) {
 				for(String i : resultList) {
 					/* reverse retrieved words back */
 					String j = revBTree.reverseWord(i);
@@ -85,7 +88,7 @@ public class BTreeProcessor {
 				resultB = manageLeadingQueries("*"+words[1], revBTree);
 				
 				/* reverse words in resultB and at to resultList */
-				if(resultB != null) {
+				if(resultB.size() != 0) {
 					for(String i : resultB) {						
 						resultList.add(revBTree.reverseWord(i));
 					}
@@ -102,7 +105,7 @@ public class BTreeProcessor {
 				}
 				
 			} else {
-				System.out.println("Coming soon?? Maybe....");
+				System.out.println("Multiple wildcard terms not implemented....");
 			}
 		}
 	}
@@ -144,7 +147,7 @@ public class BTreeProcessor {
 	 * @author Pierre Lopez Barbosa
 	 */
 	private void noResults() {
-		System.out.println("No results were found for your wildcard query");
+		System.out.println("\nNo results were found for the wildcard query");
 	}
 
 	/**
@@ -164,7 +167,7 @@ public class BTreeProcessor {
 			for(Integer docId : results.get(0).keySet())
 				output += Main.docs.get(docId) + " | ";
 		else
-			output = "No matching results found in the index !";
+			output = "\nNo matching documents found in the index!";
 		
 		return output;
 	}
