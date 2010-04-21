@@ -86,7 +86,7 @@ public class BTreeProcessor {
 
 				/* second part do reverse btree search */
 				resultB = manageLeadingQueries("*"+words[1], revBTree);
-				
+
 				/* If one of both lists is empty no results have been found */
 				if(resultA.size() == 0 || resultB.size() == 0) {
 					noResults();
@@ -99,6 +99,11 @@ public class BTreeProcessor {
 					
 					/* Compute the intersection of both resultList and resultA */
 					resultList.retainAll(resultA);
+					
+					/* If intersection is empty: no results were found */
+					if(resultList.size() == 0) {
+						noResults();
+					}
 					
 					/* Print out results */
 					for (String i : resultList) {
