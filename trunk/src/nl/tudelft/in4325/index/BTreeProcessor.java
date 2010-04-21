@@ -1,5 +1,6 @@
 package nl.tudelft.in4325.index;
 
+import java.text.Normalizer;
 import java.util.ArrayList;
 import java.util.Hashtable;
 import java.util.List;
@@ -29,8 +30,10 @@ public class BTreeProcessor {
 	 * @author Pierre Lopez Barbosa
 	 */
 	public void processBTreeSearchResult(String s) {
-		/* Converts all of the characters in this String to lower case */
-		s = s.toLowerCase();
+		/* Converts all of the characters in this String to lower case 
+		 * and removes characters except a-z, A-Z, 0-9, white space and the * sign
+		 */
+		s = Normalizer.normalize(s, Normalizer.Form.NFC).toLowerCase().replaceAll("[^a-zA-Z 0-9*]+","");
 		
 		/* List for holding results for all 3 cases */
 		List<String> resultList = new ArrayList<String>();

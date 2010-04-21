@@ -67,14 +67,18 @@ public class Main
 			if(query.equals("q")) System.exit(0);
 
 
-			if(query.contains("*")) {
+			if(query.trim().length() == 0) {
+				System.out.println("Please be sure to enter a term..");
+			}
+			else if(query.contains("*")) {
 				/* perform b-tree search using wild cards */
 				btreeprocessor.processBTreeSearchResult(query);
 			}
 			else if(query.charAt(0) == '$') {
 				/* perform a boolean search/optimized cosine ranking on the query */
 				Search.booleanSearch(query, 1);
-			}else {
+			}
+			else {
 				/* perform a boolean search/cosine ranking on the query */
 				Search.booleanSearch(query, 0);
 			}
