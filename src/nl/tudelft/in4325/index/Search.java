@@ -66,7 +66,7 @@ public class Search {
 					printSuggestions(nextWord);
 					
 					/* search for the next word in the Hashtable and add it to the results */
-					Hashtable<Integer,Integer> result = Main.index.get(nextWord);
+					Hashtable<Integer,Integer> result = (Hashtable<Integer,Integer>)Main.index.get(nextWord).clone();
 					results.add(result);
 					pertermResults.put(nextWord, result);
 				}
@@ -76,7 +76,7 @@ public class Search {
 					printSuggestions(keyword);
 					
 					/* search for the keyword in the Hashtable and add it to the results */
-					Hashtable<Integer,Integer> result = Main.index.get(keyword);
+					Hashtable<Integer,Integer> result = (Hashtable<Integer,Integer>)Main.index.get(keyword).clone();
 					results.add(result);
 					pertermResults.put(keyword, result);
 				}
@@ -98,7 +98,7 @@ public class Search {
 				/* print the suggestions by using soundex */
 				printSuggestions(keyword);
 				
-				Hashtable<Integer,Integer> result = Main.index.get(keyword);
+				Hashtable<Integer,Integer> result = (Hashtable<Integer,Integer>)Main.index.get(keyword).clone();
 				
 				/* only add if there are results */
 				if(result != null)
