@@ -75,7 +75,7 @@ public class Ranking {
 	 * 
 	 */
 	public static double tfidf(int tf, int df, int N){
-		return (1+Math.log(tf))*Math.log10(((double)N)/((double)df));
+		return (1+Math.log(tf))*Math.log10(((double)N+1.0)/((double)df));
 	}
 	/**
 	 * returns normalized version of vector
