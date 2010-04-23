@@ -31,6 +31,7 @@ public class Search {
 	 * @author Thijs Zandvliet
 	 * @param query
 	 */
+	@SuppressWarnings("unchecked")
 	public static void booleanSearch(String query, int mode)
 	{
 		/* if in optimize cosine ranking mode */
@@ -98,11 +99,12 @@ public class Search {
 				/* print the suggestions by using soundex */
 				printSuggestions(keyword);
 				
-				Hashtable<Integer,Integer> result = (Hashtable<Integer,Integer>)Main.index.get(keyword).clone();
+				Hashtable<Integer,Integer> result = (Hashtable<Integer,Integer>) Main.index.get(keyword);
 				
 				/* only add if there are results */
 				if(result != null)
 				{
+					result = (Hashtable<Integer,Integer>)result.clone();
 					results.add(result);
 					pertermResults.put(keyword, result);
 				}
@@ -229,7 +231,8 @@ public class Search {
 	}
 	
 	public static void printRanked(PriorityQueue<RankedNode> p){
-		String output = "Ranked result (top 3 of "+p.size()+")";
+		Integer top = p.size() < 3 ? p.size() : 3;
+		String output = "Ranked result (top " + top + " of "+p.size()+")";
 		RankedNode n;
 		for(int i = 0;i<3 && !p.isEmpty();i++){
 			n = p.poll();

@@ -20,8 +20,8 @@ public class RankedNode implements Comparable<RankedNode>{
 		double s1 = this.getScore();
 		double s2 = o.getScore();
 		int i = 0;
-		if(s1 < s2) i--;
-		if(s1 > s2) i++;
+		if(s1 > s2) i--;
+		if(s1 < s2) i++;
 		return i;
 	}
 }
